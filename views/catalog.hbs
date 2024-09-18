@@ -1,29 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Catalog - Home Cooking Recipes</title>
-    <link rel="stylesheet" href="./styles/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Recipes</a></li>
-                <li><a href="#">Search</a></li>
-                <li><a href="#">Add Recipe</a></li>
-                <li><a href="#">Login</a></li>
-                <li><a href="#">Register</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
+
         <h2>Recipe Catalog</h2>
+        {{#if recipes.length}}
         <section class="recipes">
+            {{#each recipes}}
             <article class="recipe">
                 <img src="https://static01.nyt.com/images/2021/02/14/dining/carbonara-horizontal/carbonara-horizontal-square640-v2.jpg" alt="Spaghetti Carbonara">
                 <h3>Spaghetti Carbonara</h3>
@@ -54,13 +33,9 @@
                 <p>Serve jacket potatoes with a spicy mayo with ginger for a fresh take.</p>
                 <a href="#">Read More</a>
             </article>
+            {{/each}}
             <!-- Add more recipes here -->
-            
-            <!-- <p class="no-post">There are no recipes found yet!</p> -->
+            {{else}}
+            <p class="no-post" style="text-align: center;">There are no recipes found yet!</p> 
+            {{/if}}
         </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Home Cooking Recipes. All rights reserved.</p>
-    </footer>
-</body>
-</html>

@@ -29,8 +29,8 @@ const CustomSchema = new mongoose.Schema({
     required: true,
     match: /^https?:\/\//,
   },
-  recommendList: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  owner: { type: Schema.Types.ObjectId, ref: "User" },
+  recommendList: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 const Recipe = mongoose.model("Recipe", CustomSchema);
