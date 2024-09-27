@@ -1,9 +1,25 @@
 const mongoose = require("mongoose");
 
-exports.getErrorMessage = (err) => {
-  if (err instanceof mongoose.MongooseError) {
-    return Object.values(err.errors).at(0).message;
-  } else if (err instanceof Error) {
-    return err.message;
+function parseError(err) {
+  if (err instanceof Error) {
+    if (!err.errors) {
+      err.errors = [err.message];
+    } else {
+      //mongoose valid error
+      const error = new Error("Input validation error");
+      error.errors = Object.fromEntries(
+        Object.values(err.errors).map((e) => [e.path, e.message])
+      );
+      return error;
+    }
+  } else if (Array.isArray(err)) {
+    const error = new Error("input validation error");
+    error.errors = Object.fromEntries(err.map((e) => [e.path, e.msg]));
+
+    return error;
   }
-};
+
+  return err;
+}
+
+module.exports = { parseError };

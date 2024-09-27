@@ -1,22 +1,52 @@
 const router = require("express").Router();
+const { body, validationResult } = require("express-validator");
+const { guestsOnly } = require("../middlewares/routeGuards");
 const authService = require("../services/authService");
-const { getErrorMessage } = require("../utils/getErrorMessage");
-router.get("/register", (req, res) => {
+const { parseError } = require("../utils/getErrorMessage");
+router.get("/register", guestsOnly, (req, res) => {
   res.render("auth/register");
 });
 
-router.post("/register", async (req, res) => {
-  const userData = req.body;
-  try {
-    const token = await authService.register(userData);
+router.post(
+  "/register",
+  guestsOnly,
+  body("username")
+    .trim()
+    .isLength({ min: 2, max: 10 })
+    .withMessage("username must between 2 and 10 characters"),
+  body("email")
+    .trim()
+    .isEmail()
+    .isLength({ min: 10 })
+    .withMessage("email must be at least 10 characters"),
+  body("password")
+    .trim()
+    .isLength({ min: 4 })
+    .withMessage("passwords must be at least 4 characters"),
+  body("rePassword")
+    .trim()
+    .custom((value, { req }) => value === req.body.password)
+    .withMessage("passwords don't match"),
 
-    res.cookie("auth", token);
+  async (req, res) => {
+    const userData = req.body;
+    try {
+      const validation = validationResult(req);
+      if (!validation.error) {
+        throw validation.errors;
+      }
+      const token = await authService.register(userData);
 
-    res.redirect("/");
-  } catch (err) {
-    res.render("auth/register", { error: getErrorMessage(err) });
+      res.cookie("auth", token);
+
+      res.redirect("/");
+    } catch (err) {
+      res.render("auth/register", {
+        error: parseError(err).errors,
+      });
+    }
   }
-});
+);
 
 router.get("/login", (req, res) => {
   res.render("auth/login");
@@ -29,7 +59,7 @@ router.post("/login", async (req, res) => {
     res.cookie("auth", token);
     res.redirect("/");
   } catch (err) {
-    res.render("auth/login", { error: getErrorMessage(err) });
+    res.render("auth/login", { error: parseError(err) });
   }
 });
 

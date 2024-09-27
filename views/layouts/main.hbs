@@ -9,14 +9,21 @@
 </head>
 
 <body>
+         {{#if error}}
+       <div class="error-container">
+            {{#each error}}
+            <p>{{this}}</p>
+            {{/each}}
+        </div> 
+        {{/if}}
     <header>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/recipes">Recipes</a></li>
-                <li><a href="#">Search</a></li>
+                <li><a href="/recipes/catalog">Recipes</a></li>
+                <li><a href="/search">Search</a></li>
                   {{#if isAuthenticated}}
-                <li><a href="#">Add Recipe</a></li>
+                <li><a href="/recipes/create">Add Recipe</a></li>
                 <li><a href="/auth/logout">Logout</a></li>
                 {{else}}
                 <li><a href="/auth/login">Login</a></li>
